@@ -1,0 +1,6 @@
+version: "0.1"
+
+apps:
+  go-echo-quickstart:
+    environment:
+      TEST_KEY: value
