@@ -1,8 +1,20 @@
 version: "0.1"
 
+events:
+  go-echo-quickstart-deployments:
+    actions:
+      - app-deployed
+    blocks:
+      - go-echo-quickstart
+    targets:
+      slack:
+        channels:
+          - nullstone
+
 apps:
   go-echo-quickstart:
     module: nullstone/aws-fargate-service
     capabilities:
       - name: jwt-keys
         module: nullstone/jwt-keys
+
