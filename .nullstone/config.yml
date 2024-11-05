@@ -3,3 +3,6 @@ version: "0.1"
 apps:
   go-echo-quickstart:
     module: nullstone/aws-fargate-service
+    capabilities:
+      - name: jwt-keys
+        module: nullstone/jwt-keys
