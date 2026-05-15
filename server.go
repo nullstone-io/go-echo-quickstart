@@ -1,13 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/nullstone-io/go-telemetry"
+	slogecho "github.com/samber/slog-echo"
 )
 
 type (
@@ -75,15 +80,30 @@ func getAllUsers(c echo.Context) error {
 }
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
+	ctx := context.Background()
+	shutdownTelemetry := telemetry.Start(ctx, telemetry.Config{
+		EnableLogger: true,
+		PackageName:  "go-echo-quickstart",
+	})
+	defer shutdownTelemetry()
+	if err := telemetry.WatchRuntime(); err != nil {
+		slog.Warn("failed to start runtime metrics", "error", err)
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
+	slog.Info("starting go-echo-quickstart", "port", port)
+
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.Logger())
+	e.Use(slogecho.New(logger))
 	e.Use(middleware.Recover())
 
 	// Routes

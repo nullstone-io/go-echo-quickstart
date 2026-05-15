@@ -4,7 +4,7 @@ services:
     volumes:
       - vendor:/app/vendor
     ports:
-      - "8080:8080"
+      - "8280:8080"
     environment:
       NULLSTONE_ENV: local
       POSTGRES_URL: postgres://postgres:postgres@db:5432/app
@@ -13,9 +13,9 @@ services:
       - db
 
   db:
-    image: "postgres:15"
+    image: "postgres:18"
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
